@@ -52,7 +52,13 @@ class Message extends BaseMessage
 	 */
 	public function setFrom($from)
 	{
-		$this->addEmailParam($from, 'from');
+		if (is_array($from) && BaseArrayHelper::isAssociative($from)) {
+			$this->sendGridMessage->setFrom(key($from), current($from));
+		}
+		else
+		{
+			$this->sendGridMessage->setFrom($from);
+		}
 
 		return $this;
 	}
@@ -239,7 +245,7 @@ class Message extends BaseMessage
 	
 	/**
 	 * @param string|array $paramValue ['email' => 'name'] or 'email'
-	 * @param string $paramType sendGrid var name like cc, bcc, to, from
+	 * @param string $paramType sendGrid var name like cc, bcc, to
 	 */
 	private function addSingleParam($paramValue, $paramType)
 	{
