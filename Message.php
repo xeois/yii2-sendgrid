@@ -214,9 +214,18 @@ class Message extends BaseMessage
 	{
 		$string = '';
 		foreach ($this->sendGridMessage->toWebFormat() as $key => $value) {
-			$string .= sprintf("%s:%s\n", $key, $value);
+			$string .= sprintf("%s:%s\n", $key, $this->processWebFormatElement($value));
 		}
 		return $string;
+	}
+
+	/**
+	 * @param  array|string $elValue
+	 * @return string
+	 */
+	private function processWebFormatElement($elValue)
+	{
+		return is_array($elValue) ? implode(', ', $elValue) : $elValue;
 	}
 
 	/**
@@ -224,6 +233,7 @@ class Message extends BaseMessage
 	 * @param string|array $paramValue ['email' => 'name'] or ['email', ['email' => 'name'], 'email'] or 'email'
 	 * @inheritdoc yii\mail\MessageInterface for more info
 	 * @param string $paramType sendGrid var name like cc, bcc, to, from
+	 * @return $this
 	 */
 	private function addEmailParam($paramValue, $paramType)
 	{
