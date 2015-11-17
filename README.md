@@ -1,4 +1,4 @@
-Yii 2 bryglen SendGrid
+Yii 2 shershennm SendGrid **forked from bryglen/yii2-sendgrid**
 ==============
 Sendgrid Mailer for Yii 2
 
@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist bryglen/yii2-sendgrid "*"
+php composer.phar require --prefer-dist shershennm/yii2-sendgrid "*"
 ```
 
 or add
 
 ```
-"bryglen/yii2-sendgrid": "1.1.2"
+"shershennm/yii2-sendgrid": "1.1.2"
 ```
 
 to the require section of your `composer.json` file.
@@ -33,7 +33,7 @@ To use Mailer, you should configure it in the application configuration like the
 'components' => [
 	...
 	'sendGrid' => [
-		'class' => 'bryglen\sendgrid\Mailer',
+		'class' => 'shershennm\sendgrid\Mailer',
 		'username' => 'your_user_name',
 		'password' => 'your password here',
 		//'viewPath' => '@app/views/mail', // your view path here

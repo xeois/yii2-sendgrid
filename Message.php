@@ -6,9 +6,10 @@
  * @time 6:48 PM
  */
 
-namespace bryglen\sendgrid;
+namespace shershennm\sendgrid;
 
 use yii\mail\BaseMessage;
+use yii\helpers\BaseArrayHelper;
 
 class Message extends BaseMessage
 {
@@ -16,7 +17,7 @@ class Message extends BaseMessage
 
     public function getSendGridMessage()
     {
-        if (!is_object($this->_sendGridMessage)) {
+        if ($this->_sendGridMessage == null) {
             $this->_sendGridMessage = new \SendGrid\Email();
         }
         return $this->_sendGridMessage;
@@ -43,7 +44,7 @@ class Message extends BaseMessage
      */
     public function getFrom()
     {
-        return $this->getSendGridMessage()->getFrom();
+        return $this->sendGridMessage->getFrom();
     }
 
     /**
@@ -51,12 +52,7 @@ class Message extends BaseMessage
      */
     public function setFrom($from)
     {
-        if (is_array($from)) {
-            $this->getSendGridMessage()->setFrom(key($from));
-            $this->getSendGridMessage()->setFromName(current($from));
-        } else {
-            $this->getSendGridMessage()->setFrom($from);
-        }
+        $this->addEmailParam($from, 'from');
 
         return $this;
     }
@@ -66,7 +62,7 @@ class Message extends BaseMessage
      */
     public function getReplyTo()
     {
-        return $this->getSendGridMessage()->getReplyTo();
+        return $this->sendGridMessage->getReplyTo();
     }
 
     /**
@@ -74,7 +70,7 @@ class Message extends BaseMessage
      */
     public function setReplyTo($replyTo)
     {
-        $this->getSendGridMessage()->setReplyTo($replyTo);
+        $this->sendGridMessage->setReplyTo($replyTo);
 
         return $this;
     }
@@ -84,7 +80,7 @@ class Message extends BaseMessage
      */
     public function getTo()
     {
-        return $this->getSendGridMessage()->to;
+        return $this->sendGridMessage->to;
     }
 
     /**
@@ -92,11 +88,7 @@ class Message extends BaseMessage
      */
     public function setTo($to)
     {
-        if (is_array($to)) {
-            $this->getSendGridMessage()->setTos($to);
-        } else {
-            $this->getSendGridMessage()->addTo($to);
-        }
+        $this->addEmailParam($to, 'to');
 
         return $this;
     }
@@ -106,7 +98,7 @@ class Message extends BaseMessage
      */
     public function getCc()
     {
-        return $this->getSendGridMessage()->getCcs();
+        return $this->sendGridMessage->getCcs();
     }
 
     /**
@@ -114,7 +106,7 @@ class Message extends BaseMessage
      */
     public function setCc($cc)
     {
-        $this->getSendGridMessage()->addCc($cc);
+        $this->addEmailParam($cc, 'cc');
 
         return $this;
     }
@@ -124,7 +116,7 @@ class Message extends BaseMessage
      */
     public function getBcc()
     {
-        return $this->getSendGridMessage()->getBccs();
+        return $this->sendGridMessage->getBccs();
     }
 
     /**
@@ -132,7 +124,7 @@ class Message extends BaseMessage
      */
     public function setBcc($bcc)
     {
-        $this->getSendGridMessage()->addBcc($bcc);
+        $this->addEmailParam($bcc, 'bcc');
 
         return $this;
     }
@@ -142,7 +134,7 @@ class Message extends BaseMessage
      */
     public function getSubject()
     {
-        return $this->getSendGridMessage()->getSubject();
+        return $this->sendGridMessage->getSubject();
     }
 
     /**
@@ -150,7 +142,7 @@ class Message extends BaseMessage
      */
     public function setSubject($subject)
     {
-        $this->getSendGridMessage()->setSubject($subject);
+        $this->sendGridMessage->setSubject($subject);
 
         return $this;
     }
@@ -160,7 +152,7 @@ class Message extends BaseMessage
      */
     public function setTextBody($text)
     {
-        $this->getSendGridMessage()->setText($text);
+        $this->sendGridMessage->setText($text);
 
         return $this;
     }
@@ -170,7 +162,7 @@ class Message extends BaseMessage
      */
     public function setHtmlBody($html)
     {
-        $this->getSendGridMessage()->setHtml($html);
+        $this->sendGridMessage->setHtml($html);
 
         return $this;
     }
@@ -180,7 +172,7 @@ class Message extends BaseMessage
      */
     public function attach($fileName, array $options = [])
     {
-        $this->getSendGridMessage()->addAttachment($fileName);
+        $this->sendGridMessage->addAttachment($fileName);
 
         return $this;
     }
@@ -215,9 +207,40 @@ class Message extends BaseMessage
     public function toString()
     {
         $string = '';
-        foreach ($this->getSendGridMessage()->toWebFormat() as $key => $value) {
+        foreach ($this->sendGridMessage->toWebFormat() as $key => $value) {
             $string .= sprintf("%s:%s\n", $key, $value);
         }
         return $string;
+    }
+
+    private function addEmailParam($paramValue, $paramType)
+    {
+        $paramTypeName = $paramType . 'Name';
+
+        $this->sendGridMessage->$paramType = [];
+        $this->sendGridMessage->$paramTypeName = [];
+
+        if (!is_array($paramValue) || BaseArrayHelper::isAssociative($paramValue)) {
+            $this->addSingleParam($paramValue, $paramType);
+        } else {
+            foreach ($paramValue as $value) {
+                $this->addSingleParam($paramValue, $paramType);
+            }
+        }
+
+        return $this;
+    }
+
+    private function addSingleParam($paramValue, $paramType)
+    {
+        $addFunction = 'add' . ucfirst($paramType);
+
+        if (BaseArrayHelper::isAssociative($paramValue)) {
+            $this->sendGridMessage->$addFunction(key($paramValue), current($paramValue));
+        }
+        else
+        {
+            $this->$addFunction($paramValue);
+        }
     }
 } 

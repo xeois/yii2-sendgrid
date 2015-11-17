@@ -1,22 +1,23 @@
 {
-    "name": "bryglen/yii2-sendgrid",
+    "name": "shershennm/yii2-sendgrid",
     "description": "Sendgrid Mailer for Yii 2",
     "type": "yii2-extension",
-    "keywords": ["yii2", "extension", "sendgrid", "bryglen"],
+    "keywords": ["yii2", "extension", "sendgrid", "shershennm"],
     "license": "MIT",
     "version": "1.1.2",
     "authors": [
         {
-            "name": "Bryan Jayson Tan",
-            "email": "bryantan16@gmail.com"
+            "name": "shershennm",
+            "email": "shershennick@gmail.com",
+            "role": "Developer"
         }
     ],
 	"require": {
-		"sendgrid/sendgrid": "2.2.1"
+		"sendgrid/sendgrid": "~4.0"
 	},
     "autoload": {
         "psr-4": {
-            "bryglen\\sendgrid\\": ""
+            "shershennm\\sendgrid\\": ""
         }
     }
 }

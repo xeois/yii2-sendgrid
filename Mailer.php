@@ -4,7 +4,7 @@
  * @link http://bryantan.info
  */
 
-namespace bryglen\sendgrid;
+namespace shershennm\sendgrid;
 
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -51,7 +51,7 @@ class Mailer extends BaseMailer
     /**
      * @var string message default class name.
      */
-    public $messageClass = 'bryglen\sendgrid\Message';
+    public $messageClass = 'shershennm\sendgrid\Message';
     /**
      * @var string the username for the sendgrid api
      */
@@ -61,6 +61,10 @@ class Mailer extends BaseMailer
      * @var string the password for the sendgrid api
      */
     public $password;
+    /**
+     * @var string key for the sendgrid api
+     */
+    public $key;
     /**
      * @var array a list of options for the sendgrid api
      */
@@ -84,28 +88,26 @@ class Mailer extends BaseMailer
     public function getSendGridMailer()
     {
         if (!is_object($this->_sendGridMailer)) {
-            $this->_sendGridMailer = $this->createSendGridMailer($this->username, $this->password, $this->options);
+            $this->_sendGridMailer = $this->createSendGridMailer();
         }
 
         return $this->_sendGridMailer;
     }
 
     /**
-     * Create send grid mail instance
-     * @param string $username the username for the sendgrid api
-     * @param string $password the password for the sendgrid api
+     * Create send grid mail instance with stored params
      * @return \SendGrid
      * @throws \yii\base\InvalidConfigException
      */
-    public function createSendGridMailer($username, $password, $options)
+    public function createSendGridMailer()
     {
-        if (!$username) {
-            throw new InvalidConfigException("Username cannot be empty.");
+        if ($this->key) {
+            $sendgrid = new \SendGrid($this->key, $options);
+        } elseif ($this->username && $this->password) {
+            $sendgrid = new \SendGrid($this->username, $this->password, $options);
+        } else {
+            throw new InvalidConfigException("You must configure mailer.");
         }
-        if (!$password) {
-            throw new InvalidConfigException("Password cannot be empty.");
-        }
-        $sendgrid = new \SendGrid($username, $password , $options);
 
         return $sendgrid;
     }
@@ -115,12 +117,7 @@ class Mailer extends BaseMailer
      */
     public function sendMessage($message)
     {
-        $address = $message->getTo();
-        if (is_array($address)) {
-            $address = implode(', ', array_keys($address));
-        }
-
-        $this->setRawResponse($this->getSendGridMailer()->send($message->getSendGridMessage()));
+        $this->setRawResponse($this->sendGridMailer->send($message->sendGridMessage));
         $responseArray = Json::decode($this->getRawResponse());
 
         if (!isset($responseArray['message'])) {
