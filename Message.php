@@ -250,7 +250,7 @@ class Message extends BaseMessage
 		}
 		else
 		{
-			$this->$addFunction($paramValue);
+			$this->sendGridMessage->$addFunction($paramValue);
 		}
 	}
 } 
