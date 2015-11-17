@@ -102,9 +102,9 @@ class Mailer extends BaseMailer
 	public function createSendGridMailer()
 	{
 		if ($this->key) {
-			$sendgrid = new \SendGrid($this->key, $options);
+			$sendgrid = new \SendGrid($this->key, $this->options);
 		} elseif ($this->username && $this->password) {
-			$sendgrid = new \SendGrid($this->username, $this->password, $options);
+			$sendgrid = new \SendGrid($this->username, $this->password, $this->options);
 		} else {
 			throw new InvalidConfigException("You must configure mailer.");
 		}
