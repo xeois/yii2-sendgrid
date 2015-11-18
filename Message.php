@@ -1,10 +1,4 @@
 <?php
-/**
- * @author Bryan Jayson Tan <bryantan16@gmail.com>
- * @link http://bryantan.info
- * @date 3/24/14
- * @time 6:48 PM
- */
 
 namespace shershennm\sendgrid;
 
@@ -13,6 +7,9 @@ use yii\helpers\BaseArrayHelper;
 
 class Message extends BaseMessage
 {
+	/**
+	 * @var \SendGrid\Email
+	 */
 	private $_sendGridMessage;
 
 	public function getSendGridMessage()
@@ -21,6 +18,36 @@ class Message extends BaseMessage
 			$this->_sendGridMessage = new \SendGrid\Email();
 		}
 		return $this->_sendGridMessage;
+	}
+
+	/**
+	 * @param string $templateId sendGrid template id
+	 * @param array [key => value] array for sendGrid substition
+	 */
+	public function setSendGridSubstitution($templateId, array $templateSubstitution = [])
+	{
+
+		$this->sendGridMessage->addFilter('templates', 'enabled', 1)
+			->addFilter('templates', 'template_id', $templateId)
+			->setSubstitutions($this->normalizeSubstitution($templateSubstitution));
+
+		return $this;
+	}
+
+	/**
+	 * @param  array $templateSubstitution [key => value]
+	 * @return array [key => [value]] for substition
+	 */
+	private function normalizeSubstitution($templateSubstitution)
+	{
+		foreach ($templateSubstitution as $key => $value) {
+			if (!is_array($value))
+			{
+				$templateSubstitution[$key] = [$value];
+			}
+		}
+
+		return $templateSubstitution;
 	}
 
 	/**
