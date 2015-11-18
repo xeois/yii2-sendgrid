@@ -15,36 +15,10 @@ use Yii;
 /**
  * Mailer implements a mailer based on SendGrid.
  *
- * To use Mailer, you should configure it in the application configuration like the following,
- *
- * ~~~
- * 'components' => [
- *     ...
- *     'sendGrid' => [
- *         'class' => 'bryglen\sendgrid\Mailer',
- *         'username' => 'your_user_name',
- *         'password' => 'your password here',
- *         //'viewPath' => '@app/views/mail', // your view path here
- *     ],
- *     ...
- * ],
- * ~~~
- *
- * To send an email, you may use the following code:
- *
- * ~~~
- * $sendGrid = Yii::$app->sendGrid;
- * $message = $sendGrid->compose('contact/html', ['contactForm' => $form])
- * $message->setFrom('from@domain.com')
- *     ->setTo($form->email)
- *     ->setSubject($form->subject)
- *     ->send($sendGrid);
- * ~~~
- *
- * Note: you need to pass a parameter in the send() if your component is not `mail`
+ * To use Mailer, you should configure it in the application configuration. See README for more information.
  *
  * @see http://sendgrid.com/
- * @package bryglen\sendgrid
+ * @package shershennm\sendgrid
  */
 class Mailer extends BaseMailer
 {
