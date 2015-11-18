@@ -1,7 +1,7 @@
-Yii 2 shershennm SendGrid **forked from bryglen/yii2-sendgrid**
-==============
+Yii 2 shershennm SendGrid
+=========================
 Sendgrid Mailer for Yii 2
-
+> forked from [bryglen/yii2-sendgrid](https://github.com/bryglen/yii2-sendgrid.git)
 Installation
 ------------
 
@@ -34,8 +34,8 @@ To use Mailer, you should configure it in the application configuration like the
 	...
 	'sendGrid' => [
 		'class' => 'shershennm\sendgrid\Mailer',
-		'username' => 'your_user_name',
-		'password' => 'your password here',
+		'key' => 'your api key', OR 'username' => 'your username',
+									'password' => 'your password here',
 		//'viewPath' => '@app/views/mail', // your view path here
 	],
 	...
@@ -51,4 +51,9 @@ $message->setFrom('from@domain.com')
 	->setTo($form->email)
 	->setSubject($form->subject)
 	->send($sendGrid);
+	//also you can use sendgrid substitutions
+	->setSendGridSubstitution('template id', [
+		':var1' => 'var1value',
+		':var2' => 'var2value',
+	]);
 ```
