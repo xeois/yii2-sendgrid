@@ -4,7 +4,7 @@
     "type": "yii2-extension",
     "keywords": ["yii2", "extension", "sendgrid", "shershennm"],
     "license": "MIT",
-    "version": "1.1.4",
+    "version": "2.0.0",
     "authors": [
         {
             "name": "shershennm",

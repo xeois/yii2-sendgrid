@@ -80,7 +80,8 @@ class Message extends BaseMessage
 	public function setFrom($from)
 	{
 		if (is_array($from) && BaseArrayHelper::isAssociative($from)) {
-			$this->sendGridMessage->setFrom(key($from), current($from));
+			$this->sendGridMessage->setFrom(key($from));
+			$this->sendGridMessage->setFromName(current($from));
 		}
 		else
 		{
