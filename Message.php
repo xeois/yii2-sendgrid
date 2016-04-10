@@ -274,7 +274,7 @@ class Message extends BaseMessage
 			$this->addSingleParam($paramValue, $paramType);
 		} else {
 			foreach ($paramValue as $value) {
-				$this->addSingleParam($paramValue, $paramType);
+				$this->addSingleParam($value, $paramType);
 			}
 		}
 
