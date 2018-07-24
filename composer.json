@@ -13,11 +13,15 @@
         }
     ],
 	"require": {
-		"sendgrid/sendgrid": "~4.0"
+		"sendgrid/sendgrid": "^7.0.0",
+        "yiisoft/yii2": "^2.0.4"
 	},
     "autoload": {
         "psr-4": {
-            "shershennm\\sendgrid\\": ""
+            "shershennm\\sendgrid\\": "src"
         }
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.4"
     }
 }
