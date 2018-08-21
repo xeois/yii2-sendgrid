@@ -1,16 +1,17 @@
 <?php
 
+use shershennm\sendgrid\Mailer;
 use shershennm\sendgrid\Message;
 
 class MessageTest extends \Codeception\Test\Unit
 {
     protected function _before()
     {
-        new \yii\console\Application([
+        new yii\console\Application([
             'id' => 'app',
             'basePath' => __DIR__,
             'components' => [
-                'mailer' => new \djagya\sparkpost\Mailer(['apiKey' => 'string', 'useDefaultEmail' => false]),
+                'mailer' => new Mailer(['apiKey' => 'string', 'useFileTransport' => false]),
             ],
         ]);
     }
@@ -22,116 +23,130 @@ class MessageTest extends \Codeception\Test\Unit
 
     public function testEmbedContent()
     {
-
-    }
-
-    public function testSetTo()
-    {
-
+        $this->expectException('\yii\base\NotSupportedException');
+        (new Message())->embedContent(null);
     }
 
     public function testGetSendGridMessage()
     {
-
+        $this->assertInstanceOf(
+            \SendGrid\Mail\Mail::class,
+            (new Message())->getSendGridMessage()
+        );
     }
 
     public function testSetCharset()
     {
-
-    }
-
-    public function testSetReplyTo()
-    {
-
-    }
-
-    public function testSetSendGridSubstitution()
-    {
-
-    }
-
-    public function testAttach()
-    {
-
-    }
-
-    public function testGetReplyTo()
-    {
-
-    }
-
-    public function testSetCc()
-    {
-
-    }
-
-    public function testToString()
-    {
-
+        $this->expectException('\yii\base\NotSupportedException');
+        (new Message())->setCharset(null);
     }
 
     public function testGetCharset()
     {
-
+        $this->expectException('\yii\base\NotSupportedException');
+        (new Message())->getCharset();
     }
 
-    public function testGetTo()
+    public function testSetSendGridSubstitution()
     {
-
+        $this->assertInstanceOf(
+            Message::class,
+            (new Message())->setSendGridSubstitution(SENDGRID_TEMPLATE));
     }
 
-    public function testGetFrom()
+    public function testAttach()
     {
-
+        $message = (new Message())->attach(__FILE__);
+        $attachments = $message->sendGridMessage->getAttachments();
+        $this->assertEquals('MessageTest.php', $attachments[0]->getFilename());
+        $this->assertEquals(
+            base64_encode(file_get_contents(__FILE__)),
+            $attachments[0]->getContent()
+        );
     }
 
-    public function testSetSubject()
+    public function testSetGetReplyTo()
     {
+        $message = (new Message())->setReplyTo(SENDGRID_TO);
+        $this->assertEquals(SENDGRID_TO, ($message->getReplyTo())->getEmailAddress());
+    }
 
+    public function testSetGetCc()
+    {
+        $message = (new Message())->setCc(SENDGRID_TO);
+        $this->assertEquals(SENDGRID_TO, $message->getCc()[0]->getEmail());
+    }
+
+    public function testToString()
+    {
+        $message = (new Message())
+            ->setFrom(SENDGRID_FROM)
+            ->setSubject('Test')
+            ->setReplyTo(SENDGRID_TO);
+
+        $jsonString = $message->toString();
+
+        $decodedMessage = json_decode($jsonString);
+        $this->assertEquals(SENDGRID_FROM, $decodedMessage->from->email);
+        $this->assertEquals('Test', $decodedMessage->subject);
+        $this->assertEquals(SENDGRID_TO, $decodedMessage->reply_to->email);
+    }
+
+    public function testSetGetTo()
+    {
+        $message = (new Message())->setTo(SENDGRID_TO);
+        $this->assertEquals(SENDGRID_TO, $message->getTo()[0]->getEmail());
+    }
+
+    public function testSetGetFrom()
+    {
+        $message = (new Message())->setFrom(SENDGRID_FROM);
+        $this->assertEquals(SENDGRID_FROM, $message->getFrom()->getEmail());
+    }
+
+    public function testSetGetSubject()
+    {
+        $message = (new Message())->setSubject('Test');
+        $this->assertEquals('Test', $message->sendGridMessage->getGlobalSubject()->getSubject());
     }
 
     public function testAttachContent()
     {
-
+        $message = (new Message())->attachContent(
+            'test',
+            [
+                'fileName' => 'file.php',
+                'contentType' => 'text/plain'
+            ]);
+        $attachments = $message->sendGridMessage->getAttachments();
+        $this->assertEquals('file.php', $attachments[0]->getFilename());
+        $this->assertEquals(
+            'test',
+            $attachments[0]->getContent()
+        );
     }
 
-    public function testSetHtmlBody()
+    public function testSetGetHtmlBody()
     {
-
+        $message = (new Message())->setHtmlBody('Test');
+        $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
     }
 
-    public function testSetFrom()
+    public function testSetGetBcc()
     {
-
-    }
-
-    public function testSetBcc()
-    {
-
+        $message = (new Message())->setBcc(SENDGRID_TO);
+        $this->assertEquals(SENDGRID_TO, $message->getBcc()[0]->getEmail());
     }
 
     public function testEmbed()
     {
-
+        $this->expectException('\yii\base\NotSupportedException');
+        (new Message())->embed(null);
     }
 
-    public function testGetBcc()
+    public function testSetGetTextBody()
     {
-
-    }
-
-    public function testGetSubject()
-    {
-
-    }
-
-    public function testGetCc()
-    {
-
-    }
-
-    public function testSetTextBody()
-    {
-
+        $message = (new Message())->setTextBody('Test');
+        $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
     }
 }

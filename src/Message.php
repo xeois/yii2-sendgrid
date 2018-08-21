@@ -253,7 +253,13 @@ class Message extends BaseMessage implements MessageInterface
      */
 	protected function getPersonalizationParams($personalization)
     {
-        return array_merge(... ArrayHelper::getColumn($this->sendGridMessage->getPersonalizations(), $personalization . 's'));
+        $params = [];
+
+        foreach ($this->sendGridMessage->getPersonalizations() as $sendGridPersonalization) {
+            $params[] = $sendGridPersonalization->{'get' . ucfirst($personalization . 's')}();
+        }
+
+        return array_merge(... $params);
     }
 
     /**
