@@ -11,7 +11,7 @@ class MessageTest extends \Codeception\Test\Unit
             'id' => 'app',
             'basePath' => __DIR__,
             'components' => [
-                'mailer' => new Mailer(['apiKey' => 'string', 'useFileTransport' => false]),
+                'mailer' => new Mailer(['apiKey' => SENDGRID_TOKEN, 'useFileTransport' => false]),
             ],
         ]);
     }
@@ -148,5 +148,28 @@ class MessageTest extends \Codeception\Test\Unit
     {
         $message = (new Message())->setTextBody('Test');
         $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
+    }
+
+    public function testSendMessage()
+    {
+        $message = (new Message())
+            ->setFrom(SENDGRID_FROM)
+            ->setTo(SENDGRID_TO)
+            ->setSubject('Test')
+            ->setTextBody('Test text body');
+        $this->assertTrue(Yii::$app->mailer->sendMessage($message));
+    }
+
+    public function testSendTemplate()
+    {
+        $message = (new Message())
+            ->setSendGridSubstitution(SENDGRID_TEMPLATE, [
+                ':testUserName' => 'John Smith',
+                ':testMessage' => 'This test message'
+            ])
+            ->setSubject('Test')
+            ->setFrom(SENDGRID_FROM)
+            ->setTo(SENDGRID_TO);
+        $this->assertTrue(Yii::$app->mailer->sendMessage($message));
     }
 }

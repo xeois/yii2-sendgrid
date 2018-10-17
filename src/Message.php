@@ -256,10 +256,10 @@ class Message extends BaseMessage implements MessageInterface
         $params = [];
 
         foreach ($this->sendGridMessage->getPersonalizations() as $sendGridPersonalization) {
-            $params[] = $sendGridPersonalization->{'get' . ucfirst($personalization . 's')}();
+            $params = array_merge($params, $sendGridPersonalization->{'get' . ucfirst($personalization . 's')}());
         }
 
-        return array_merge(... $params);
+        return $params;
     }
 
     /**
