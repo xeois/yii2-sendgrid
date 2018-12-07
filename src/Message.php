@@ -227,7 +227,7 @@ class Message extends BaseMessage implements MessageInterface
      */
     public function getCharset()
     {
-        throw new NotSupportedException('Content and subject must be in UTF charset!');
+        return 'UTF-8';
     }
 
     /**
@@ -236,7 +236,9 @@ class Message extends BaseMessage implements MessageInterface
      */
     public function setCharset($charset)
     {
-        throw new NotSupportedException('Content and subject must be in UTF charset!');
+        if (strtoupper($charset) !== 'UTF-8') {
+            NotSupportedException('Content and subject must be in UTF-8 charset!');
+        }
     }
 
     /**
@@ -256,7 +258,11 @@ class Message extends BaseMessage implements MessageInterface
         $params = [];
 
         foreach ($this->sendGridMessage->getPersonalizations() as $sendGridPersonalization) {
-            $params = array_merge($params, $sendGridPersonalization->{'get' . ucfirst($personalization . 's')}());
+            $value = $sendGridPersonalization->{'get' . ucfirst($personalization . 's')}();
+
+            if ($value) {
+                $params = array_merge($params, is_array($value) ? $value : [$value]);
+            }
         }
 
         return $params;
