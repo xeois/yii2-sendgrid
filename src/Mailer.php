@@ -73,7 +73,7 @@ class Mailer extends BaseMailer implements MailerInterface
 	{
 		$response = $this->sendGridMailer->send($message->sendGridMessage);
 
-		if ($response->statusCode() !== 200) {
+		if ($response->statusCode() >= 400) {
 			throw new SendgridException(sprintf(
 			    'Sendgrid returned %d with "%s" error',
                 $response->statusCode(),
