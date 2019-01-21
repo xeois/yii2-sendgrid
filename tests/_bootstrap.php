@@ -12,6 +12,7 @@ define('SENDGRID_FROM', '<EMAIL_FROM>');
 define('SENDGRID_TOKEN', '<YOUR_TOKEN>');
 define('SENDGRID_TO', '<EMAIL_TO>');
 define('SENDGRID_TEMPLATE', '<TEMPLATE_ID>');
+define('SENDGRID_DYNAMIC_TEMPLATE', '<TEMPLATE_ID>');
 
 //Yii::setAlias('@tests/unit', __DIR__ . '/unit');
 Yii::setAlias('@sweelix/sendgrid', dirname(__DIR__) .'/src');

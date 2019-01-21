@@ -173,4 +173,24 @@ class MessageTest extends \Codeception\Test\Unit
             ->setTo(SENDGRID_TO);
         $this->assertTrue(Yii::$app->mailer->sendMessage($message));
     }
+
+    public function testSendDynamicTemplate()
+    {
+        $message = (new Message())
+            ->setSendGridSubstitution(SENDGRID_DYNAMIC_TEMPLATE, [
+                'name' => 'John Smith',
+                'messages' => [
+                    [
+                        'text'=> 'This test message #1',
+                    ],
+                    [
+                        'text'=> 'This test message #2',
+                    ],
+                ]
+            ])
+            ->setSubject('Test')
+            ->setFrom(SENDGRID_FROM)
+            ->setTo(SENDGRID_TO);
+        $this->assertTrue(Yii::$app->mailer->sendMessage($message));
+    }
 }
