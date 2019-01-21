@@ -5,7 +5,6 @@ namespace shershennm\sendgrid;
 use SendGrid\Mail\Mail;
 use SendGrid\Mail\MimeType;
 use yii\base\NotSupportedException;
-use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
 use yii\mail\BaseMessage;
@@ -18,182 +17,190 @@ use yii\mail\MessageInterface;
  */
 class Message extends BaseMessage implements MessageInterface
 {
-	/**
-	 * @var Mail
-	 */
-	private $_sendGridMessage;
+    /**
+     * @var Mail
+     */
+    private $_sendGridMessage;
 
     /**
      * @return Mail
      */
-	public function getSendGridMessage()
-	{
-		if ($this->_sendGridMessage == null) {
-			$this->_sendGridMessage = new Mail();
-		}
-		return $this->_sendGridMessage;
-	}
+    public function getSendGridMessage()
+    {
+        if ($this->_sendGridMessage == null) {
+            $this->_sendGridMessage = new Mail();
+        }
+        return $this->_sendGridMessage;
+    }
 
     /**
      * @param string $templateId sendGrid template id
      * @param array [key => value] array for sendGrid substitution
      * @return Message
      */
-	public function setSendGridSubstitution($templateId, array $templateSubstitution = [])
-	{
+    public function setSendGridSubstitution($templateId, array $templateSubstitution = [])
+    {
+        $this->sendGridMessage->setTemplateId($templateId);
+        $this->sendGridMessage->addSubstitutions($this->normalizeSubstitutions($templateSubstitution));
 
-		$this->sendGridMessage->setTemplateId($templateId);
-		$this->sendGridMessage->addSubstitutions($templateSubstitution);
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * @param array $templateSubstitution
+     * @return array
+     */
+    private function normalizeSubstitutions(array $templateSubstitution = [])
+    {
+        return array_map('strval', $templateSubstitution);
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getFrom()
-	{
-		return $this->sendGridMessage->getFrom();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getFrom()
+    {
+        return $this->sendGridMessage->getFrom();
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setFrom($from)
-	{
-		if (is_array($from)) {
-			$this->sendGridMessage->setFrom(key($from), current($from));
-		} else {
-			$this->sendGridMessage->setFrom($from);
-		}
+    /**
+     * @inheritdoc
+     */
+    public function setFrom($from)
+    {
+        if (is_array($from)) {
+            $this->sendGridMessage->setFrom(key($from), current($from));
+        } else {
+            $this->sendGridMessage->setFrom($from);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getReplyTo()
-	{
-		return $this->sendGridMessage->getReplyTo();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getReplyTo()
+    {
+        return $this->sendGridMessage->getReplyTo();
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setReplyTo($replyTo)
-	{
-		$this->sendGridMessage->setReplyTo($replyTo);
+    /**
+     * @inheritdoc
+     */
+    public function setReplyTo($replyTo)
+    {
+        $this->sendGridMessage->setReplyTo($replyTo);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getTo()
-	{
-		return $this->getPersonalizationParams('to');
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getTo()
+    {
+        return $this->getPersonalizationParams('to');
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setTo($to)
-	{
+    /**
+     * @inheritdoc
+     */
+    public function setTo($to)
+    {
         return $this->setPersonalizationParams('to', $to);
-	}
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getCc()
-	{
+    /**
+     * @inheritdoc
+     */
+    public function getCc()
+    {
         return $this->getPersonalizationParams('cc');
-	}
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setCc($cc)
-	{
+    /**
+     * @inheritdoc
+     */
+    public function setCc($cc)
+    {
         return $this->setPersonalizationParams('cc', $cc);
-	}
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getBcc()
-	{
+    /**
+     * @inheritdoc
+     */
+    public function getBcc()
+    {
         return $this->getPersonalizationParams('bcc');
-	}
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setBcc($bcc)
-	{
+    /**
+     * @inheritdoc
+     */
+    public function setBcc($bcc)
+    {
         return $this->setPersonalizationParams('bcc', $bcc);
-	}
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getSubject()
-	{
-		return $this->sendGridMessage->getSubject();
-	}
+    /**
+     * @inheritdoc
+     */
+    public function getSubject()
+    {
+        return $this->sendGridMessage->getSubject();
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setSubject($subject)
-	{
-		$this->sendGridMessage->setSubject($subject);
+    /**
+     * @inheritdoc
+     */
+    public function setSubject($subject)
+    {
+        $this->sendGridMessage->setSubject($subject);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setTextBody($text)
-	{
-		$this->sendGridMessage->addContent(MimeType::TEXT, $text);
+    /**
+     * @inheritdoc
+     */
+    public function setTextBody($text)
+    {
+        $this->sendGridMessage->addContent(MimeType::TEXT, $text);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function setHtmlBody($html)
-	{
+    /**
+     * @inheritdoc
+     */
+    public function setHtmlBody($html)
+    {
         $this->sendGridMessage->addContent(MimeType::HTML, $html);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * @inheritdoc
      * @throws \yii\base\InvalidConfigException
      */
-	public function attach($fileName, array $options = [])
-	{
-		$this->sendGridMessage->addAttachment(
-		    base64_encode(file_get_contents($fileName)),
+    public function attach($fileName, array $options = [])
+    {
+        $this->sendGridMessage->addAttachment(
+            base64_encode(file_get_contents($fileName)),
             isset($options['contentType']) ? $options['contentType'] : FileHelper::getMimeType($fileName),
             isset($options['fileName']) ? $options['fileName'] : basename($fileName)
         );
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attachContent($content, array $options = [])
-	{
+    /**
+     * @inheritdoc
+     */
+    public function attachContent($content, array $options = [])
+    {
         $this->sendGridMessage->addAttachment(
             $content,
             isset($options['contentType']) ? $options['contentType'] : null,
@@ -201,29 +208,28 @@ class Message extends BaseMessage implements MessageInterface
         );
 
         return $this;
-	}
+    }
 
     /**
      * @inheritdoc
      * @throws NotSupportedException
      */
-	public function embed($fileName, array $options = [])
-	{
-		throw new NotSupportedException('No available method for sendgrid!');
-	}
-
-    /**
-     * @inheritdoc
-     * @throws NotSupportedException
-     */
-	public function embedContent($content, array $options = [])
-	{
+    public function embed($fileName, array $options = [])
+    {
         throw new NotSupportedException('No available method for sendgrid!');
-	}
+    }
 
     /**
      * @inheritdoc
      * @throws NotSupportedException
+     */
+    public function embedContent($content, array $options = [])
+    {
+        throw new NotSupportedException('No available method for sendgrid!');
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getCharset()
     {
@@ -237,23 +243,23 @@ class Message extends BaseMessage implements MessageInterface
     public function setCharset($charset)
     {
         if (strtoupper($charset) !== 'UTF-8') {
-            NotSupportedException('Content and subject must be in UTF-8 charset!');
+            throw new NotSupportedException('Content and subject must be in UTF-8 charset!');
         }
     }
 
     /**
-	 * @inheritdoc
-	 */
-	public function toString()
-	{
-		return Json::encode($this->sendGridMessage->jsonSerialize());
-	}
+     * @inheritdoc
+     */
+    public function toString()
+    {
+        return Json::encode($this->sendGridMessage->jsonSerialize());
+    }
 
     /**
      * @param $personalization string
      * @return array
      */
-	protected function getPersonalizationParams($personalization)
+    protected function getPersonalizationParams($personalization)
     {
         $params = [];
 
@@ -273,7 +279,7 @@ class Message extends BaseMessage implements MessageInterface
      * @param $emails array|string
      * @return $this
      */
-	protected function setPersonalizationParams($personalization, $emails)
+    protected function setPersonalizationParams($personalization, $emails)
     {
         $addMethod = 'add' . ucfirst($personalization);
 

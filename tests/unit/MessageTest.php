@@ -43,15 +43,15 @@ class MessageTest extends \Codeception\Test\Unit
 
     public function testGetCharset()
     {
-        $this->expectException('\yii\base\NotSupportedException');
-        (new Message())->getCharset();
+        $this->assertEquals('UTF-8', (new Message())->getCharset());
     }
 
     public function testSetSendGridSubstitution()
     {
         $this->assertInstanceOf(
             Message::class,
-            (new Message())->setSendGridSubstitution(SENDGRID_TEMPLATE));
+            (new Message())->setSendGridSubstitution(SENDGRID_TEMPLATE)
+        );
     }
 
     public function testAttach()
@@ -117,7 +117,8 @@ class MessageTest extends \Codeception\Test\Unit
             [
                 'fileName' => 'file.php',
                 'contentType' => 'text/plain'
-            ]);
+            ]
+        );
         $attachments = $message->sendGridMessage->getAttachments();
         $this->assertEquals('file.php', $attachments[0]->getFilename());
         $this->assertEquals(
