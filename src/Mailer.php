@@ -17,70 +17,70 @@ use yii\mail\MailerInterface;
  */
 class Mailer extends BaseMailer implements MailerInterface
 {
-	/**
-	 * @var string message default class name.
-	 */
-	public $messageClass = 'shershennm\sendgrid\Message';
+    /**
+     * @var string message default class name.
+     */
+    public $messageClass = 'shershennm\sendgrid\Message';
 
-	/**
-	 * @var string key for the sendgrid api
-	 */
-	public $apiKey;
+    /**
+     * @var string key for the sendgrid api
+     */
+    public $apiKey;
 
-	/**
-	 * @var array a list of options for the sendgrid api
-	 */
-	public $options = [];
+    /**
+     * @var array a list of options for the sendgrid api
+     */
+    public $options = [];
 
-	/**
-	 * @var string Send grid mailer instance
-	 */
-	private $_sendGridMailer;
+    /**
+     * @var string Send grid mailer instance
+     */
+    private $_sendGridMailer;
 
     /**
      * @return \SendGrid Send grid mailer instance
      * @throws InvalidConfigException
      */
-	public function getSendGridMailer()
-	{
-		if (!is_object($this->_sendGridMailer)) {
-			$this->_sendGridMailer = $this->createSendGridMailer();
-		}
+    public function getSendGridMailer()
+    {
+        if (!is_object($this->_sendGridMailer)) {
+            $this->_sendGridMailer = $this->createSendGridMailer();
+        }
 
-		return $this->_sendGridMailer;
-	}
+        return $this->_sendGridMailer;
+    }
 
-	/**
-	 * Create send grid mail instance with stored params
-	 * @return \SendGrid
-	 * @throws \yii\base\InvalidConfigException
-	 */
-	public function createSendGridMailer()
-	{
-		if ($this->apiKey) {
+    /**
+     * Create send grid mail instance with stored params
+     * @return \SendGrid
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function createSendGridMailer()
+    {
+        if ($this->apiKey) {
             return new \SendGrid($this->apiKey, $this->options);
-		} else {
-			throw new InvalidConfigException("You must configure mailer.");
-		}
-	}
+        } else {
+            throw new InvalidConfigException("You must configure mailer.");
+        }
+    }
 
     /**
      * @param Message $message
      * @return bool
      * @throws \Exception
      */
-	public function sendMessage($message)
-	{
-		$response = $this->sendGridMailer->send($message->sendGridMessage);
+    public function sendMessage($message)
+    {
+        $response = $this->sendGridMailer->send($message->sendGridMessage);
 
-		if ($response->statusCode() >= 400) {
-			throw new SendgridException(sprintf(
-			    'Sendgrid returned %d with "%s" error',
+        if ($response->statusCode() >= 400) {
+            throw new SendgridException(sprintf(
+                'Sendgrid returned %d with "%s" error',
                 $response->statusCode(),
                 $response->body()
             ));
-		}
+        }
 
-		return true;
-	}
+        return true;
+    }
 }
