@@ -4,6 +4,7 @@ namespace shershennm\sendgrid;
 
 use SendGrid\Mail\Mail;
 use SendGrid\Mail\MimeType;
+use SendGrid\Mail\Substitution;
 use yii\base\NotSupportedException;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
@@ -52,7 +53,13 @@ class Message extends BaseMessage implements MessageInterface
      */
     private function normalizeSubstitutions(array $templateSubstitution = [])
     {
-        return array_map('strval', $templateSubstitution);
+        $substitutions = [];
+
+        foreach ($templateSubstitution as $key => $value) {
+            $substitutions[] = new Substitution($key, $value);
+        }
+
+        return $substitutions;
     }
 
     /**
