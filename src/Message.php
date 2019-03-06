@@ -2,6 +2,7 @@
 
 namespace shershennm\sendgrid;
 
+use SendGrid\Mail\From;
 use SendGrid\Mail\Mail;
 use SendGrid\Mail\MimeType;
 use SendGrid\Mail\Substitution;
@@ -67,7 +68,18 @@ class Message extends BaseMessage implements MessageInterface
      */
     public function getFrom()
     {
-        return $this->sendGridMessage->getFrom();
+        /** @var From $from */
+        $from = $this->sendGridMessage->getFrom();
+
+        if (!$from) {
+            return null;
+        }
+
+        if ($from->getName()) {
+            return [$from->getEmail() => $from->getName()];
+        }
+
+        return $from->getEmail();
     }
 
     /**
