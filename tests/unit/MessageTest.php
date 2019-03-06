@@ -101,7 +101,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetFrom()
     {
         $message = (new Message())->setFrom(SENDGRID_FROM);
-        $this->assertEquals(SENDGRID_FROM, $message->getFrom()->getEmail());
+        $this->assertEquals(SENDGRID_FROM, $message->getFrom());
     }
 
     public function testSetGetSubject()
