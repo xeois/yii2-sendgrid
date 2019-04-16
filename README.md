@@ -12,13 +12,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist shershennm/yii2-sendgrid "*"
+php composer.phar require --prefer-dist shershennm/yii2-sendgrid "^3.0"
 ```
 
 or add
 
 ```
-"shershennm/yii2-sendgrid": "2.*"
+"shershennm/yii2-sendgrid": "^3.0"
 ```
 
 to the require section of your `composer.json` file.
@@ -36,10 +36,8 @@ To use Mailer, you should configure it in the application configuration like the
 	...
 	'sendGrid' => [
 		'class' => 'shershennm\sendgrid\Mailer',
-		'key' => 'your api key', OR 'username' => 'your username',
-									'password' => 'your password here',
-		//'viewPath' => '@app/views/mail', // your view path here
-	],
+		'apiKey' => 'your api key',
+	]
 	...
 ],
 ```
