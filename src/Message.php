@@ -10,14 +10,13 @@ use yii\base\NotSupportedException;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
 use yii\mail\BaseMessage;
-use yii\mail\MessageInterface;
 
 /**
  * Class Message
  * @package shershennm\sendgrid
  * @property Mail $sendGridMessage
  */
-class Message extends BaseMessage implements MessageInterface
+class Message extends BaseMessage
 {
     /**
      * @var Mail
@@ -84,6 +83,7 @@ class Message extends BaseMessage implements MessageInterface
 
     /**
      * @inheritdoc
+     * @throws \SendGrid\Mail\TypeException
      */
     public function setFrom($from)
     {
@@ -315,5 +315,60 @@ class Message extends BaseMessage implements MessageInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getContents($type = null)
+    {
+        $contents = $this->sendGridMessage->getContents();
+
+        if (!$type) {
+            return $contents;
+        }
+
+        if ($contents && count($contents)) {
+            foreach ($contents as $content) {
+                /** @var \SendGrid\Mail\Content $content */
+                if ($content->getType() === $type) {
+                    return $content->getValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTextBody()
+    {
+        return $this->getContents(MimeType::TEXT);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getHtmlBody()
+    {
+        return $this->getContents(MimeType::HTML);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTemplateId()
+    {
+        return $this->sendGridMessage->getTemplateId();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSubstitutions()
+    {
+        return $this->sendGridMessage->getSubstitutions();
     }
 }
