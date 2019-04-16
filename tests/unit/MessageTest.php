@@ -130,7 +130,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetHtmlBody()
     {
         $message = (new Message())->setHtmlBody('Test');
-        $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
+        $this->assertEquals('Test', $message->getHtmlBody());
     }
 
     public function testSetGetBcc()
@@ -148,7 +148,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetTextBody()
     {
         $message = (new Message())->setTextBody('Test');
-        $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
+        $this->assertEquals('Test', $message->getTextBody());
     }
 
     public function testSendMessage()
