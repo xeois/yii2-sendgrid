@@ -41,7 +41,7 @@ class Message extends BaseMessage
      */
     public function setSendGridSubstitution($templateId, array $templateSubstitution = [])
     {
-        $this->sendGridMessage->setTemplateId($templateId);
+        $this->setTemplateId($templateId);
         $this->sendGridMessage->addSubstitutions($this->normalizeSubstitutions($templateSubstitution));
 
         return $this;
@@ -343,6 +343,14 @@ class Message extends BaseMessage
     /**
      * @inheritdoc
      */
+    public function setTemplateId($templateId)
+    {
+        return $this->sendGridMessage->setTemplateId($templateId);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getTextBody()
     {
         return $this->getContents(MimeType::TEXT);
@@ -365,10 +373,11 @@ class Message extends BaseMessage
     }
 
     /**
-     * @inheritdoc
+     * @param int $index
+     * @return array
      */
-    public function getSubstitutions()
+    public function getSubstitutionByIndex($index = 0)
     {
-        return $this->sendGridMessage->getSubstitutions();
+        return $this->sendGridMessage->getSubstitutions($index);
     }
 }

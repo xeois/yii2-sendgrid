@@ -46,12 +46,22 @@ class MessageTest extends \Codeception\Test\Unit
         $this->assertEquals('UTF-8', (new Message())->getCharset());
     }
 
-    public function testSetSendGridSubstitution()
+    public function testSetGetSendGridSubstitution()
     {
+        $message = (new Message())->setSendGridSubstitution(
+            SENDGRID_TEMPLATE,
+            [':text' => 'Hello']
+        );
+
         $this->assertInstanceOf(
             Message::class,
-            (new Message())->setSendGridSubstitution(SENDGRID_TEMPLATE)
+            $message
         );
+
+        $substitution = $message->getSubstitutionByIndex();
+
+        $this->assertIsArray($substitution);
+        $this->assertEquals($substitution[':text'], 'Hello');
     }
 
     public function testAttach()
@@ -181,10 +191,10 @@ class MessageTest extends \Codeception\Test\Unit
                 'name' => 'John Smith',
                 'messages' => [
                     [
-                        'text'=> 'This test message #1',
+                        'text' => 'This test message #1',
                     ],
                     [
-                        'text'=> 'This test message #2',
+                        'text' => 'This test message #2',
                     ],
                 ]
             ])
@@ -192,5 +202,15 @@ class MessageTest extends \Codeception\Test\Unit
             ->setFrom(SENDGRID_FROM)
             ->setTo(SENDGRID_TO);
         $this->assertTrue(Yii::$app->mailer->sendMessage($message));
+    }
+
+    public function testSetGetTemplateId()
+    {
+        $message = new Message();
+        $message->setTemplateId(SENDGRID_TEMPLATE);
+
+        $templateId = $message->getTemplateId();
+        $this->assertInstanceOf(\SendGrid\Mail\TemplateId::class, $templateId);
+        $this->assertEquals($templateId->getTemplateId(), SENDGRID_TEMPLATE);
     }
 }
