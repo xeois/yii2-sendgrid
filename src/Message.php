@@ -16,7 +16,7 @@ use yii\mail\BaseMessage;
  * @package shershennm\sendgrid
  * @property Mail $sendGridMessage
  */
-class Message extends BaseMessage
+class Message extends BaseMessage implements MessageInterface
 {
     /**
      * @var Mail
@@ -320,7 +320,7 @@ class Message extends BaseMessage
     /**
      * @inheritdoc
      */
-    public function getContents($type = null)
+    protected function getContents($type = null)
     {
         $contents = $this->sendGridMessage->getContents();
 
@@ -349,7 +349,7 @@ class Message extends BaseMessage
     }
 
     /**
-     * @inheritdoc
+     * @return string|null
      */
     public function getTextBody()
     {
@@ -357,7 +357,7 @@ class Message extends BaseMessage
     }
 
     /**
-     * @inheritdoc
+     * @return string|null
      */
     public function getHtmlBody()
     {
@@ -373,10 +373,9 @@ class Message extends BaseMessage
     }
 
     /**
-     * @param int $index
-     * @return array
+     * @inheritdoc
      */
-    public function getSubstitutionByIndex($index = 0)
+    public function getSubstitutions($index = 0)
     {
         return $this->sendGridMessage->getSubstitutions($index);
     }
