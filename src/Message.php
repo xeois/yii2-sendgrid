@@ -35,9 +35,9 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @param string $templateId sendGrid template id
-     * @param array [key => value] array for sendGrid substitution
-     * @return Message
+     * @param $templateId
+     * @param array $templateSubstitution
+     * @return $this
      */
     public function setSendGridSubstitution($templateId, array $templateSubstitution = [])
     {
@@ -63,26 +63,17 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return array|string|null
      */
     public function getFrom()
     {
         /** @var From $from */
-        $from = $this->sendGridMessage->getFrom();
-
-        if (!$from) {
-            return null;
-        }
-
-        if ($from->getName()) {
-            return [$from->getEmail() => $from->getName()];
-        }
-
-        return $from->getEmail();
+        return $this->extractEmail($this->sendGridMessage->getFrom());
     }
 
     /**
-     * @inheritdoc
+     * @param array|string $from
+     * @return $this|MessageInterface|BaseMessage
      * @throws \SendGrid\Mail\TypeException
      */
     public function setFrom($from)
@@ -97,15 +88,16 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return array|string|null
      */
     public function getReplyTo()
     {
-        return $this->sendGridMessage->getReplyTo();
+        return $this->extractEmail($this->sendGridMessage->getReplyTo());
     }
 
     /**
-     * @inheritdoc
+     * @param array|string $replyTo
+     * @return $this|MessageInterface|BaseMessage
      */
     public function setReplyTo($replyTo)
     {
@@ -115,7 +107,7 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return \SendGrid\Mail\To[]|[]
      */
     public function getTo()
     {
@@ -123,7 +115,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param array|string $to
+     * @return Message|MessageInterface|BaseMessage
      */
     public function setTo($to)
     {
@@ -131,7 +124,7 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return \SendGrid\Mail\Cc[]|[]
      */
     public function getCc()
     {
@@ -139,7 +132,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param array|string $cc
+     * @return Message|MessageInterface|BaseMessage
      */
     public function setCc($cc)
     {
@@ -147,7 +141,7 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return \SendGrid\Mail\Bcc[]|[]
      */
     public function getBcc()
     {
@@ -155,7 +149,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param array|string $bcc
+     * @return Message|MessageInterface|BaseMessage
      */
     public function setBcc($bcc)
     {
@@ -163,15 +158,18 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return string|null
      */
     public function getSubject()
     {
-        return $this->sendGridMessage->getSubject();
+        $subject = $this->sendGridMessage->getGlobalSubject();
+
+        return $subject ? $subject->getSubject() : null;
     }
 
     /**
-     * @inheritdoc
+     * @param string $subject
+     * @return $this|MessageInterface|BaseMessage
      */
     public function setSubject($subject)
     {
@@ -181,7 +179,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $text
+     * @return $this|MessageInterface|BaseMessage
      */
     public function setTextBody($text)
     {
@@ -191,7 +190,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $html
+     * @return $this|MessageInterface|BaseMessage
      */
     public function setHtmlBody($html)
     {
@@ -201,7 +201,9 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $fileName
+     * @param array $options
+     * @return $this|MessageInterface|BaseMessage
      * @throws \yii\base\InvalidConfigException
      */
     public function attach($fileName, array $options = [])
@@ -216,7 +218,9 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $content
+     * @param array $options
+     * @return $this|MessageInterface|BaseMessage
      */
     public function attachContent($content, array $options = [])
     {
@@ -230,7 +234,9 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $fileName
+     * @param array $options
+     * @return string|void
      * @throws NotSupportedException
      */
     public function embed($fileName, array $options = [])
@@ -239,7 +245,9 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $content
+     * @param array $options
+     * @return string|void
      * @throws NotSupportedException
      */
     public function embedContent($content, array $options = [])
@@ -248,7 +256,7 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
     public function getCharset()
     {
@@ -256,7 +264,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $charset
+     * @return $this|MessageInterface|BaseMessage
      * @throws NotSupportedException
      */
     public function setCharset($charset)
@@ -264,10 +273,12 @@ class Message extends BaseMessage implements MessageInterface
         if (strtoupper($charset) !== 'UTF-8') {
             throw new NotSupportedException('Content and subject must be in UTF-8 charset!');
         }
+
+        return $this;
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
     public function toString()
     {
@@ -283,7 +294,7 @@ class Message extends BaseMessage implements MessageInterface
         $params = [];
 
         foreach ($this->sendGridMessage->getPersonalizations() as $sendGridPersonalization) {
-            $value = $sendGridPersonalization->{'get' . ucfirst($personalization . 's')}();
+            $value = $sendGridPersonalization->{sprintf('get%ss', ucfirst($personalization))}();
 
             if ($value) {
                 $params = array_merge($params, is_array($value) ? $value : [$value]);
@@ -294,8 +305,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @param $personalization string
-     * @param $emails array|string
+     * @param $personalization
+     * @param $emails
      * @return $this
      */
     protected function setPersonalizationParams($personalization, $emails)
@@ -318,7 +329,8 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param null $type string
+     * @return \SendGrid\Mail\Content[]|string|null
      */
     protected function getContents($type = null)
     {
@@ -341,11 +353,14 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @param $templateId string
+     * @return $this
      */
     public function setTemplateId($templateId)
     {
-        return $this->sendGridMessage->setTemplateId($templateId);
+       $this->sendGridMessage->setTemplateId($templateId);
+
+       return $this;
     }
 
     /**
@@ -365,18 +380,36 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
     public function getTemplateId()
     {
-        return $this->sendGridMessage->getTemplateId();
+        return $this->sendGridMessage->getTemplateId()->getTemplateId();
     }
 
     /**
-     * @inheritdoc
+     * @param int $index
+     * @return Substitution[]
      */
     public function getSubstitutions($index = 0)
     {
         return $this->sendGridMessage->getSubstitutions($index);
+    }
+
+    /**
+     * @param \SendGrid\Mail\EmailAddress $emailAddress
+     * @return array|string|null
+     */
+    protected function extractEmail($emailAddress)
+    {
+        if (!$emailAddress) {
+            return null;
+        }
+
+        if ($emailAddress->getName()) {
+            return [$emailAddress->getEmail() => $emailAddress->getName()];
+        }
+
+        return $emailAddress->getEmail();
     }
 }

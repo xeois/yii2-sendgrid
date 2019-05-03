@@ -78,7 +78,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetReplyTo()
     {
         $message = (new Message())->setReplyTo(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, ($message->getReplyTo())->getEmailAddress());
+        $this->assertEquals(SENDGRID_TO, $message->getReplyTo());
     }
 
     public function testSetGetCc()
@@ -117,7 +117,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetSubject()
     {
         $message = (new Message())->setSubject('Test');
-        $this->assertEquals('Test', $message->sendGridMessage->getGlobalSubject()->getSubject());
+        $this->assertEquals('Test', $message->getSubject());
     }
 
     public function testAttachContent()
@@ -210,7 +210,7 @@ class MessageTest extends \Codeception\Test\Unit
         $message->setTemplateId(SENDGRID_TEMPLATE);
 
         $templateId = $message->getTemplateId();
-        $this->assertInstanceOf(\SendGrid\Mail\TemplateId::class, $templateId);
-        $this->assertEquals($templateId->getTemplateId(), SENDGRID_TEMPLATE);
+
+        $this->assertEquals($templateId, SENDGRID_TEMPLATE);
     }
 }
