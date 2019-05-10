@@ -53,12 +53,7 @@ class MessageTest extends \Codeception\Test\Unit
             [':text' => 'Hello']
         );
 
-        $this->assertInstanceOf(
-            Message::class,
-            $message
-        );
-
-        $substitution = $message->getSubstitutionByIndex();
+        $substitution = $message->getSubstitutions();
 
         $this->assertIsArray($substitution);
         $this->assertEquals($substitution[':text'], 'Hello');
@@ -181,6 +176,7 @@ class MessageTest extends \Codeception\Test\Unit
             ->setSubject('Test')
             ->setFrom(SENDGRID_FROM)
             ->setTo(SENDGRID_TO);
+
         $this->assertTrue(Yii::$app->mailer->sendMessage($message));
     }
 
@@ -201,6 +197,7 @@ class MessageTest extends \Codeception\Test\Unit
             ->setSubject('Test')
             ->setFrom(SENDGRID_FROM)
             ->setTo(SENDGRID_TO);
+
         $this->assertTrue(Yii::$app->mailer->sendMessage($message));
     }
 
