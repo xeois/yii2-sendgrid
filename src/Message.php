@@ -107,11 +107,11 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @return \SendGrid\Mail\To[]|[]
+     * @return array
      */
     public function getTo()
     {
-        return $this->getPersonalizationParams('to');
+        return $this->extractEmails($this->getPersonalizationParams('to'));
     }
 
     /**
@@ -124,11 +124,11 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @return \SendGrid\Mail\Cc[]|[]
+     * @return array
      */
     public function getCc()
     {
-        return $this->getPersonalizationParams('cc');
+        return $this->extractEmails($this->getPersonalizationParams('cc'));
     }
 
     /**
@@ -141,11 +141,11 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @return \SendGrid\Mail\Bcc[]|[]
+     * @return array
      */
     public function getBcc()
     {
-        return $this->getPersonalizationParams('bcc');
+        return $this->extractEmails($this->getPersonalizationParams('bcc'));
     }
 
     /**
@@ -411,5 +411,20 @@ class Message extends BaseMessage implements MessageInterface
         }
 
         return $emailAddress->getEmail();
+    }
+
+    /**
+     * @param \SendGrid\Mail\EmailAddress[] $emailAddresses
+     * @return array
+     */
+    protected function extractEmails($emailAddresses)
+    {
+        $result = [];
+
+        foreach ($emailAddresses as $emailAddress) {
+            $result[] = $this->extractEmail($emailAddress);
+        }
+
+        return $result;
     }
 }

@@ -84,7 +84,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetCc()
     {
         $message = (new Message())->setCc(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, $message->getCc()[0]->getEmail());
+        $this->assertEquals(SENDGRID_TO, $message->getCc()[0]);
     }
 
     public function testToString()
@@ -105,7 +105,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetTo()
     {
         $message = (new Message())->setTo(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, $message->getTo()[0]->getEmail());
+        $this->assertEquals(SENDGRID_TO, $message->getTo()[0]);
     }
 
     public function testSetGetFrom()
@@ -146,7 +146,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetBcc()
     {
         $message = (new Message())->setBcc(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, $message->getBcc()[0]->getEmail());
+        $this->assertEquals(SENDGRID_TO, $message->getBcc()[0]);
     }
 
     public function testEmbed()
