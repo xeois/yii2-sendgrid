@@ -46,12 +46,17 @@ class MessageTest extends \Codeception\Test\Unit
         $this->assertEquals('UTF-8', (new Message())->getCharset());
     }
 
-    public function testSetSendGridSubstitution()
+    public function testSetGetSendGridSubstitution()
     {
-        $this->assertInstanceOf(
-            Message::class,
-            (new Message())->setSendGridSubstitution(SENDGRID_TEMPLATE)
+        $message = (new Message())->setSendGridSubstitution(
+            SENDGRID_TEMPLATE,
+            [':text' => 'Hello']
         );
+
+        $substitution = $message->getSubstitutions();
+
+        $this->assertIsArray($substitution);
+        $this->assertEquals($substitution[':text'], 'Hello');
     }
 
     public function testAttach()
@@ -68,13 +73,13 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetReplyTo()
     {
         $message = (new Message())->setReplyTo(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, ($message->getReplyTo())->getEmailAddress());
+        $this->assertEquals(SENDGRID_TO, $message->getReplyTo());
     }
 
     public function testSetGetCc()
     {
         $message = (new Message())->setCc(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, $message->getCc()[0]->getEmail());
+        $this->assertEquals(SENDGRID_TO, $message->getCc()[0]);
     }
 
     public function testToString()
@@ -95,7 +100,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetTo()
     {
         $message = (new Message())->setTo(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, $message->getTo()[0]->getEmail());
+        $this->assertEquals(SENDGRID_TO, $message->getTo()[0]);
     }
 
     public function testSetGetFrom()
@@ -107,7 +112,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetSubject()
     {
         $message = (new Message())->setSubject('Test');
-        $this->assertEquals('Test', $message->sendGridMessage->getGlobalSubject()->getSubject());
+        $this->assertEquals('Test', $message->getSubject());
     }
 
     public function testAttachContent()
@@ -130,13 +135,13 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetHtmlBody()
     {
         $message = (new Message())->setHtmlBody('Test');
-        $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
+        $this->assertEquals('Test', $message->getHtmlBody());
     }
 
     public function testSetGetBcc()
     {
         $message = (new Message())->setBcc(SENDGRID_TO);
-        $this->assertEquals(SENDGRID_TO, $message->getBcc()[0]->getEmail());
+        $this->assertEquals(SENDGRID_TO, $message->getBcc()[0]);
     }
 
     public function testEmbed()
@@ -148,7 +153,7 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetTextBody()
     {
         $message = (new Message())->setTextBody('Test');
-        $this->assertEquals('Test', $message->sendGridMessage->getContents()[0]->getValue());
+        $this->assertEquals('Test', $message->getTextBody());
     }
 
     public function testSendMessage()
@@ -171,6 +176,7 @@ class MessageTest extends \Codeception\Test\Unit
             ->setSubject('Test')
             ->setFrom(SENDGRID_FROM)
             ->setTo(SENDGRID_TO);
+
         $this->assertTrue(Yii::$app->mailer->sendMessage($message));
     }
 
@@ -181,16 +187,27 @@ class MessageTest extends \Codeception\Test\Unit
                 'name' => 'John Smith',
                 'messages' => [
                     [
-                        'text'=> 'This test message #1',
+                        'text' => 'This test message #1',
                     ],
                     [
-                        'text'=> 'This test message #2',
+                        'text' => 'This test message #2',
                     ],
                 ]
             ])
             ->setSubject('Test')
             ->setFrom(SENDGRID_FROM)
             ->setTo(SENDGRID_TO);
+
         $this->assertTrue(Yii::$app->mailer->sendMessage($message));
+    }
+
+    public function testSetGetTemplateId()
+    {
+        $message = new Message();
+        $message->setTemplateId(SENDGRID_TEMPLATE);
+
+        $templateId = $message->getTemplateId();
+
+        $this->assertEquals($templateId, SENDGRID_TEMPLATE);
     }
 }
