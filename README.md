@@ -4,6 +4,10 @@ Sendgrid Mailer for Yii 2
 
 > forked from [bryglen/yii2-sendgrid](https://github.com/bryglen/yii2-sendgrid.git)
 
+**3.1.0 update** 
+
+Methods which returned `\SendGrid\Mail\EmailAddress` or array with this type, now returns plain email string or `['email' => 'name']` array or array with this values.
+
 Installation
 ------------
 
@@ -12,13 +16,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist shershennm/yii2-sendgrid "^3.0"
+php composer.phar require --prefer-dist shershennm/yii2-sendgrid "^3.1"
 ```
 
 or add
 
 ```
-"shershennm/yii2-sendgrid": "^3.0"
+"shershennm/yii2-sendgrid": "^3.1"
 ```
 
 to the require section of your `composer.json` file.
