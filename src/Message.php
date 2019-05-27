@@ -380,11 +380,13 @@ class Message extends BaseMessage implements MessageInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTemplateId()
     {
-        return $this->sendGridMessage->getTemplateId()->getTemplateId();
+        $templateId = $this->sendGridMessage->getTemplateId();
+
+        return $templateId ? $templateId->getTemplateId() : null;
     }
 
     /**
