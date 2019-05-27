@@ -204,10 +204,10 @@ class MessageTest extends \Codeception\Test\Unit
     public function testSetGetTemplateId()
     {
         $message = new Message();
+
+        $this->assertNull($message->getTemplateId());
         $message->setTemplateId(SENDGRID_TEMPLATE);
 
-        $templateId = $message->getTemplateId();
-
-        $this->assertEquals($templateId, SENDGRID_TEMPLATE);
+        $this->assertEquals($message->getTemplateId(), SENDGRID_TEMPLATE);
     }
 }
