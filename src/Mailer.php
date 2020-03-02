@@ -1,6 +1,6 @@
 <?php
 
-namespace shershennm\sendgrid;
+namespace xeois\sendgrid;
 
 use yii\base\InvalidConfigException;
 use yii\mail\BaseMailer;
@@ -12,7 +12,7 @@ use yii\mail\MailerInterface;
  * To use Mailer, you should configure it in the application configuration. See README for more information.
  *
  * @see http://sendgrid.com/
- * @package shershennm\sendgrid
+ * @package xeois\sendgrid
  * @property \SendGrid $sendGridMailer
  */
 class Mailer extends BaseMailer implements MailerInterface
@@ -20,7 +20,7 @@ class Mailer extends BaseMailer implements MailerInterface
     /**
      * @var string message default class name.
      */
-    public $messageClass = 'shershennm\sendgrid\Message';
+    public $messageClass = 'xeois\sendgrid\Message';
 
     /**
      * @var string key for the sendgrid api

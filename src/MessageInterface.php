@@ -1,6 +1,6 @@
 <?php
 
-namespace shershennm\sendgrid;
+namespace xeois\sendgrid;
 
 interface MessageInterface extends \yii\mail\MessageInterface
 {

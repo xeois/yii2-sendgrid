@@ -1,6 +1,6 @@
 <?php
 
-namespace shershennm\sendgrid;
+namespace xeois\sendgrid;
 
 use yii\base\Exception;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace shershennm\sendgrid;
+namespace xeois\sendgrid;
 
 use SendGrid\Mail\From;
 use SendGrid\Mail\Mail;
@@ -13,7 +13,7 @@ use yii\mail\BaseMessage;
 
 /**
  * Class Message
- * @package shershennm\sendgrid
+ * @package xeois\sendgrid
  * @property Mail $sendGridMessage
  */
 class Message extends BaseMessage implements MessageInterface
