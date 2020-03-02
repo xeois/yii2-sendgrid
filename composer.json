@@ -1,29 +1,18 @@
 {
-    "name": "shershennm/yii2-sendgrid",
+    "name": "xeois/yii2-sendgrid",
     "description": "Sendgrid Mailer for Yii 2",
     "type": "yii2-extension",
     "keywords": ["yii2", "extension", "sendgrid", "shershennm"],
     "license": "MIT",
     "version": "3.1.1",
-    "authors": [
-        {
-            "name": "shershennm",
-            "email": "shershennick@gmail.com",
-            "role": "Developer"
-        },
-        {
-            "name": "plb",
-            "email": "plymbym017@gmail.com",
-            "role": "Developer"
-        }
-    ],
+    
 	"require": {
 		"sendgrid/sendgrid": "^7.0",
         "yiisoft/yii2": "^2.0.4"
 	},
     "autoload": {
         "psr-4": {
-            "shershennm\\sendgrid\\": "src"
+            "xeois\\sendgrid\\": "src"
         }
     },
     "require-dev": {
