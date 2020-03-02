@@ -81,6 +81,6 @@ class Mailer extends BaseMailer implements MailerInterface
             ));
         }
 
-        return true;
+        return $response;
     }
 }
