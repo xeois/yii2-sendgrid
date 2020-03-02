@@ -4,11 +4,11 @@
     "type": "yii2-extension",
     "keywords": ["yii2", "extension", "sendgrid", "shershennm"],
     "license": "MIT",
-    "version": "3.1.1",
+    "version": "4.0.1",
     
 	"require": {
 		"sendgrid/sendgrid": "~7",
-        "yiisoft/yii2": "^2.0.4"
+        "yiisoft/yii2": "2.0.32"
 	},
     "autoload": {
         "psr-4": {
