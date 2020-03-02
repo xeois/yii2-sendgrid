@@ -7,7 +7,7 @@
     "version": "3.1.1",
     
 	"require": {
-		"sendgrid/sendgrid": "^7.0",
+		"sendgrid/sendgrid": "~7",
         "yiisoft/yii2": "^2.0.4"
 	},
     "autoload": {
