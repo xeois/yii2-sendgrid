@@ -8,7 +8,7 @@
     
 	"require": {
 		"sendgrid/sendgrid": "~7",
-        "yiisoft/yii2": "~2.0.32"
+        "yiisoft/yii2": "2.0.34"
 	},
     "autoload": {
         "psr-4": {
